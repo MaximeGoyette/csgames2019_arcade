@@ -13,7 +13,7 @@ class Game:
     def __init__(self, display, inputs):
         self.display = display
         self.timer = Clock()
-        self.state = surf.Surf(self)
+        self.state = menu.Menu(self)
         self.inputs = inputs
 
 

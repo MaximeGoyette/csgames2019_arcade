@@ -4,9 +4,6 @@ import random
 
 HORIZON_Y = 121
 
-SKY_COLOR = (158, 233, 247)
-WATER_COLOR = (26, 96, 237)
-
 def add((x1, y1), (x2, y2)):
     return (x1 + x2, y1 + y2)
 
@@ -24,6 +21,10 @@ class Entity:
         self.surf = surf
         self.x = 0
         self.y = 0
+        self.to_remove = False
+
+    def remove(self):
+        self.to_remove = True
 
     def map_pos(self, x, y):
         y_p = mapf(y, 0, 1, HORIZON_Y, self.surf.game.SCREEN_HEIGHT)
@@ -67,11 +68,11 @@ class Player(Entity):
     def render(self):
         x, y = self.map_pos(self.real_x, self.y)
 
-        pygame.draw.rect(self.surf.game.display, (255, 0, 0), (x, y, 20, 40))
+        pygame.draw.rect(self.surf.game.display, (255, 255, 0), (x, y, 20, 40))
 
         p1 = self.map_pos(0.5, 0)
 
-        pygame.draw.line(self.surf.game.display, (0, 0, 0), (x + self.BOARD_WIDTH / 2, y), p1)
+        # pygame.draw.line(self.surf.game.display, (0, 0, 0), (x + self.BOARD_WIDTH / 2, y), p1)
 
         p1 = self.map_pos(1, 0)
         p2 = self.map_pos(1, 1)
@@ -82,7 +83,6 @@ class Player(Entity):
         p2 = self.map_pos(0, 1)
 
         pygame.draw.line(self.surf.game.display, (0, 0, 0), p1, p2)
-
 
 
 
@@ -108,12 +108,45 @@ class Rock(Entity):
 
         if self.y > 1:
             print 'removing self...'
-            self.surf.entities.remove(self)
+            self.remove()
 
     def render(self):
         x, y = self.map_pos(self.x, self.y)
 
         self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y))
+
+
+class Tree(Entity):
+    def __init__(self, surf):
+        Entity.__init__(self, surf)
+
+        self.y = surf.y
+        self.size = self.surf.tree.get_rect().size
+
+
+    def update(self):
+        self.real_y = self.surf.y - self.y
+
+        if self.real_y < 0:
+            return
+
+        factor = mapf(self.real_y, 0, 1, 0.2, 1)
+        self.scaled_size = (int(self.size[0] * factor), int(self.size[1] * factor))
+        self.scaled = pygame.transform.scale(self.surf.tree, self.scaled_size)
+
+        if self.real_y > 1:
+            self.y = self.surf.y + random.random()
+
+
+    def render(self):
+        if self.real_y < 0:
+            return
+
+        x, y = self.map_pos(self.x, self.real_y)
+
+        self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y - self.scaled_size[1] / 2))
+
+
 
 
 class Cone(Entity):
@@ -138,7 +171,7 @@ class Cone(Entity):
 
         if self.real_y > 1:
             print 'removing self...'
-            self.surf.entities.remove(self)
+            self.remove()
 
     def render(self):
         if self.real_y < 0:
@@ -151,6 +184,15 @@ class Cone(Entity):
 
 class Surf:
     DEFAULT_SPEED = 0.02
+    BOOST_SPEED = 0.03
+    SLOW_SPEED = 0.01
+    SPEED_DAMP = 20.0 # steps required to change speed
+
+    # Key mapping
+    LEFT = 0
+    RIGHT = 1
+    UP = 2
+    DOWN = 3
 
     def __init__(self, game):
         self.game = game
@@ -158,45 +200,62 @@ class Surf:
         self.background = pygame.image.load('assets/background.jpg')
         self.rock = pygame.image.load('assets/rock.png').convert_alpha()
         self.cone = pygame.image.load('assets/cone.png').convert_alpha()
+        self.tree = pygame.image.load('assets/tree.png').convert_alpha()
         self.frame = 0
         self.y = 0
         self.entities = []
+        self.current_speed = self.DEFAULT_SPEED
 
         self.flag = True
 
         self.font = pygame.font.SysFont("Arial", 20)
 
+        self.spawn_trees()
+
         self.create_wall()
 
     def run(self):
-        # self.game.display.fill(WATER_COLOR)
-        # pygame.draw.rect(self.game.display, SKY_COLOR, (0, 0, self.game.SCREEN_WIDTH, HORIZON_Y))
-
         self.game.display.blit(self.background, (0, 0))
 
         self.pressed = self.game.get_pressed()
+
+        self.is_boosted = self.pressed[self.UP]
 
         self.player.update()
 
         for e in self.entities:
             e.update()
 
-        entities = (self.entities + [self.player])
-        entities.sort(key=lambda x: x.y)
+        self.entities.sort(key=lambda x: x.y)
 
-        for e in entities:
+
+        self.player.render()
+
+        for e in self.entities:
             e.render()
+
+
+        self.entities = [e for e in self.entities if not e.to_remove]
+
 
         self.frame += 1
 
-        if self.frame % 75 == 0:
-            # self.entities.append(Cone(self))
-            self.create_wall(0)
+        if self.frame % 30 == 0:
+            self.create_wall(random.random() * 0.4)
 
-        self.y += self.DEFAULT_SPEED
+        if self.is_boosted:
+            target_speed = self.BOOST_SPEED
+        elif  self.pressed[self.DOWN]:
+            target_speed = self.SLOW_SPEED
+        else:
+            target_speed = self.DEFAULT_SPEED
+
+        self.current_speed += (target_speed - self.current_speed) / self.SPEED_DAMP
+
+        self.y += self.current_speed
 
 
-        letter = self.font.render("frame: %d" % self.frame, 0, (255,255,0))
+        letter = self.font.render("frame: %d y: %f" % (self.frame, self.y), 0, (255,255,0))
         self.game.display.blit(letter, (20, 20))
 
     def create_wall(self, x=0, dx=0.2, n=3):
@@ -205,9 +264,24 @@ class Surf:
         for i in range(3):
             c = Cone(self)
             c.x = x + dx * i
+            c.y += (random.random() - 0.5) / 10.0
 
 
             self.entities.append(c)
 
     def create_corridor(self):
         pass
+
+
+    def spawn_trees(self):
+        for i in range(10):
+            t = Tree(self)
+
+            if i % 2 == 0:
+                t.x = -random.random() / 2 - 0.3
+            else:
+                t.x = random.random() / 2 + 1.5
+
+            t.y = random.random()
+
+            self.entities.append(t)
