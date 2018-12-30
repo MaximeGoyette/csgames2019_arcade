@@ -6,8 +6,10 @@ class GPIO:
 
         self.pi = pigpio.pi()
 
-        self.pi.set_pull_up_down(14, pigpio.PUD_UP)
-        self.pi.set_pull_up_down(15, pigpio.PUD_UP)
+	self.pi.set_pull_up_down(5, pigpio.PUD_DOWN)
+        self.pi.set_pull_up_down(6, pigpio.PUD_DOWN)
+        self.pi.set_pull_up_down(12, pigpio.PUD_DOWN)
+        self.pi.set_pull_up_down(13, pigpio.PUD_DOWN)
 
     def get_pressed(self):
-        return [not self.pi.read(14), not self.pi.read(15)]
+	return [self.pi.read(5), self.pi.read(13), self.pi.read(12), self.pi.read(6) ]
