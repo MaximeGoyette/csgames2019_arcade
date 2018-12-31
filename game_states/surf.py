@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+import menu
 
 HORIZON_Y = 121
 
@@ -22,6 +23,7 @@ class Entity:
         self.x = 0
         self.y = 0
         self.to_remove = False
+        self.scaled_size=[]
 
     def remove(self):
         self.to_remove = True
@@ -31,6 +33,7 @@ class Entity:
         x_p = mapf(x, 0, 1, -1, 1) * mapf(y, 0, 1, 50, 350) + self.surf.game.SCREEN_WIDTH / 2
 
         return (x_p, y_p)
+
 
 class Player(Entity):
     BOARD_WIDTH = 20
@@ -44,9 +47,13 @@ class Player(Entity):
         self.real_x = 0.5
         self.x = 0.5
         self.y = self.PLAYER_BASE_Y
+        self.lives = 3
 
 
     def update(self):
+        if self.lives <= 0:
+            self.surf.game.state = menu.Menu(self.surf.game)
+
         if self.surf.pressed[0]:
             self.x -= self.VELOCITY_X
 
@@ -83,6 +90,10 @@ class Player(Entity):
         p2 = self.map_pos(0, 1)
 
         pygame.draw.line(self.surf.game.display, (0, 0, 0), p1, p2)
+    
+    def get_rect(self):
+        x, y = self.map_pos(self.real_x, self.y)
+        return pygame.Rect(x, y, 20, 40)
 
 
 
@@ -114,6 +125,10 @@ class Rock(Entity):
         x, y = self.map_pos(self.x, self.y)
 
         self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y))
+
+    def get_rect(self):
+        x, y = self.map_pos(self.x, self.y)
+        return pygame.Rect((x -  self.scaled_size[0] / 2, y), self.scaled_size)
 
 
 class Tree(Entity):
@@ -181,6 +196,13 @@ class Cone(Entity):
 
         self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y))
 
+    def get_rect(self):
+        if len(self.scaled_size)<2:
+            return pygame.Rect(0,0,0,0)
+        x, y = self.map_pos(self.x, self.real_y)
+        return pygame.Rect((x -  self.scaled_size[0] / 2, y),self.scaled_size)
+
+
 
 class Surf:
     DEFAULT_SPEED = 0.02
@@ -204,6 +226,7 @@ class Surf:
         self.frame = 0
         self.y = 0
         self.entities = []
+        self.obstacle = []
         self.current_speed = self.DEFAULT_SPEED
 
         self.flag = True
@@ -226,6 +249,18 @@ class Surf:
         for e in self.entities:
             e.update()
 
+        #Check for collision
+        for e in self.obstacle:
+            if self.player.get_rect().colliderect( e.get_rect()):
+                name = self.font.render("Perdu", 0, (0, 0, 0))
+                text_rect = name.get_rect(center=(self.game.SCREEN_WIDTH / 2, self.game.SCREEN_HEIGHT / 2))
+                self.game.display.blit(name, text_rect)
+
+                self.entities.remove(e)
+                self.obstacle.remove(e)
+                self.player.lives -= 1
+
+
         self.entities.sort(key=lambda x: x.y)
 
 
@@ -242,6 +277,8 @@ class Surf:
 
         if self.frame % 30 == 0:
             self.create_wall(random.random() * 0.4)
+        #if self.frame % 20 == 0:
+        #    self.create_rock(random.random() * 0.4)
 
         if self.is_boosted:
             target_speed = self.BOOST_SPEED
@@ -258,16 +295,38 @@ class Surf:
         letter = self.font.render("frame: %d y: %f" % (self.frame, self.y), 0, (255,255,0))
         self.game.display.blit(letter, (20, 20))
 
+        #Cheats
+        if pygame.key.get_pressed()[pygame.K_KP_PLUS]:
+            self.player.lives += 1
+        elif pygame.key.get_pressed()[pygame.K_KP_PLUS]:
+            self.player.lives -= 1
+
     def create_wall(self, x=0, dx=0.2, n=3):
         print 'create_wall'
 
         for i in range(3):
             c = Cone(self)
             c.x = x + dx * i
-            c.y += (random.random() - 0.5) / 10.0
+            c.y += (random.random() ) / 10.0
 
 
             self.entities.append(c)
+            self.obstacle.append(c)
+    
+    def create_rock(self, x=0, dx=0.2, n=3):
+        print 'create_rock'
+
+        for i in range(n):
+            c = Rock(self)
+            c.x = x + dx * i
+            c.y += (random.random()-0.5)
+            if c.y >= 0:
+                c.y += 0.5
+            c.y = c.y / 10.0
+
+            self.entities.append(c)
+            self.obstacle.append(c)
+
 
     def create_corridor(self):
         pass

@@ -30,5 +30,8 @@ class Game:
 
             self.timer.tick(Game.FPS)
 
-            if pygame.event.get([pygame.QUIT]):
+            if pygame.event.get([pygame.QUIT]) or pygame.key.get_pressed()[pygame.K_ESCAPE] or pygame.key.get_pressed()[pygame.K_BACKSPACE]:
+                pygame.quit()
                 break
+            elif pygame.key.get_pressed()[pygame.K_TAB]:
+                self.state = menu.Menu(self)
