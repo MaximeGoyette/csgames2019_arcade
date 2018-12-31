@@ -117,7 +117,7 @@ class Rock(Entity):
 
 
 
-    def update(self):
+    def update2(self):
         self.y += self.SPEED
 
         factor = mapf(self.y, 0, 1, 0.25, 1)
@@ -125,13 +125,36 @@ class Rock(Entity):
         self.scaled = pygame.transform.scale(self.surf.rock, self.scaled_size)
 
         if self.y > 1:
-            print 'removing self...'
-            self.remove()
+            #print 'removing self...'
+            #self.remove()
+            self.y = self.surf.y + random.random()
 
-    def render(self):
+    def update(self):
+        self.real_y = self.surf.y - self.y
+
+        if self.real_y < 0:
+            return
+
+        factor = mapf(self.real_y, 0, 1, 0.2, 1)
+        self.scaled_size = (int(self.size[0] * factor), int(self.size[1] * factor))
+        self.scaled = pygame.transform.scale(self.surf.rock, self.scaled_size)
+
+        if self.real_y > 1:
+            self.y = self.surf.y + random.random()
+
+
+    def render2(self):
         x, y = self.map_pos(self.x, self.y)
 
         self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y))
+
+    def render(self):
+        if self.real_y < 0:
+            return
+
+        x, y = self.map_pos(self.x, self.real_y)
+
+        self.surf.game.display.blit(self.scaled, (x -  self.scaled_size[0] / 2, y - self.scaled_size[1] / 2))
 
     def get_rect(self):
         x, y = self.map_pos(self.x, self.y)
@@ -226,10 +249,10 @@ class Surf:
     def __init__(self, game):
         self.game = game
         self.player = Player(self)
-        self.background = pygame.image.load('assets/background.jpg')
+        self.background = pygame.image.load('assets/background2.png')
         self.rock = pygame.image.load('assets/rock.png').convert_alpha()
-        self.cone = pygame.image.load('assets/cone.png').convert_alpha()
-        self.tree = pygame.image.load('assets/tree.png').convert_alpha()
+        self.cone = pygame.image.load('assets/buoy.png').convert_alpha()
+        #self.tree = pygame.image.load('assets/tree.png').convert_alpha()
         self.amazon = pygame.image.load('assets/18L.png').convert_alpha()
         self.frame = 0
         self.y = 0
@@ -342,7 +365,7 @@ class Surf:
 
     def spawn_trees(self):
         for i in range(10):
-            t = Tree(self)
+            t = Rock(self)
 
             if i % 2 == 0:
                 t.x = -random.random() / 2 - 0.3
