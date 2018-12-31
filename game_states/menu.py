@@ -55,7 +55,7 @@ class Menu:
 
         self.index = self.index % len(self.UNIVERSITIES)
 
-        if pygame.time.get_ticks() - self.bounce_time > 500:
+        if pygame.time.get_ticks() - self.bounce_time > 1000:
             self.bounce = False
 
         if self.ready:

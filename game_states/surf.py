@@ -50,6 +50,7 @@ class Player(Entity):
         self.lives = 3
 
 
+
     def update(self):
         if self.lives <= 0:
             self.surf.game.state = menu.Menu(self.surf.game)
@@ -90,6 +91,12 @@ class Player(Entity):
         p2 = self.map_pos(0, 1)
 
         pygame.draw.line(self.surf.game.display, (0, 0, 0), p1, p2)
+
+        #Render Life
+        lives_image = pygame.transform.scale(self.surf.amazon, (50,50))
+
+        for i in range(self.lives):
+            self.surf.game.display.blit(lives_image,(lives_image.get_size()[0] * i, 0))
     
     def get_rect(self):
         x, y = self.map_pos(self.real_x, self.y)
@@ -223,6 +230,7 @@ class Surf:
         self.rock = pygame.image.load('assets/rock.png').convert_alpha()
         self.cone = pygame.image.load('assets/cone.png').convert_alpha()
         self.tree = pygame.image.load('assets/tree.png').convert_alpha()
+        self.amazon = pygame.image.load('assets/18L.png').convert_alpha()
         self.frame = 0
         self.y = 0
         self.entities = []
@@ -292,8 +300,8 @@ class Surf:
         self.y += self.current_speed
 
 
-        letter = self.font.render("frame: %d y: %f" % (self.frame, self.y), 0, (255,255,0))
-        self.game.display.blit(letter, (20, 20))
+        #letter = self.font.render("frame: %d y: %f" % (self.frame, self.y), 0, (255,255,0))
+        #self.game.display.blit(letter, (20, 20))
 
         #Cheats
         if pygame.key.get_pressed()[pygame.K_KP_PLUS]:
