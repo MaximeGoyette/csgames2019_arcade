@@ -17,6 +17,8 @@ class Menu:
         self.ready = False
         self.ready_time = 0
 
+        self.game.reset_data()
+
 
     def run(self):
         self.game.display.blit(self.background, (0, 0))
@@ -62,6 +64,9 @@ class Menu:
             remaining = 5 - int((pygame.time.get_ticks() - self.ready_time) / 1000.0)
 
             if remaining <= -1:
+                self.game.university = self.UNIVERSITIES[self.index]
+                if pygame.key.get_pressed()[pygame.K_KP_PERIOD] and pygame.key.get_pressed()[pygame.K_KP1] and pygame.key.get_pressed()[pygame.K_KP3]:
+                    self.game.titi = True
                 self.game.state = surf.Surf(self.game)
                 return
 

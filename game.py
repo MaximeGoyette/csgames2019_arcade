@@ -15,6 +15,12 @@ class Game:
         self.timer = Clock()
         self.state = menu.Menu(self)
         self.inputs = inputs
+        self.reset_data()
+
+    
+    def reset_data(self):
+        self.university = ""
+        self.titi = False
 
 
     def get_pressed(self):

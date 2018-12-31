@@ -16,7 +16,7 @@ def main():
     pygame.font.init()
 
     if ON_ARCADE:
-        border = pygame.display.set_mode((game.Game.SCREEN_WIDTH, game.Game.SCREEN_HEIGHT), pygame.FULLSCREEN) #, pygame.FULLSCREEN)
+        border = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #, pygame.FULLSCREEN)
         inputs = GPIO()
     else:
         border = pygame.display.set_mode((game.Game.SCREEN_WIDTH, game.Game.SCREEN_HEIGHT))

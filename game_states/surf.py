@@ -53,7 +53,7 @@ class Player(Entity):
 
     def update(self):
         if self.lives <= 0:
-            self.surf.game.state = menu.Menu(self.surf.game)
+            self.surf.end_game()
 
         if self.surf.pressed[0]:
             self.x -= self.VELOCITY_X
@@ -268,6 +268,8 @@ class Surf:
 
         self.create_wall()
 
+        self.start_time = pygame.time.get_ticks()
+
     def run(self):
         self.game.display.blit(self.background, (0, 0))
 
@@ -331,6 +333,10 @@ class Surf:
             self.player.lives += 1
         elif pygame.key.get_pressed()[pygame.K_KP_PLUS]:
             self.player.lives -= 1
+
+    def end_game(self):
+        
+        self.surf.game.state = menu.Menu(self.surf.game)
 
     def create_wall(self, x=0, dx=0.2, n=3):
         print 'create_wall'
