@@ -335,8 +335,8 @@ class Surf:
             self.player.lives -= 1
 
     def end_game(self):
-        
-        self.surf.game.state = menu.Menu(self.surf.game)
+
+        self.game.state = menu.Menu(self.game)
 
     def create_wall(self, x=0, dx=0.2, n=3):
         print 'create_wall'
