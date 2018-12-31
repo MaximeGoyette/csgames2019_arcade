@@ -7,8 +7,8 @@ import sys
 class Game:
     FPS = 24
 
-    SCREEN_WIDTH = 1920
-    SCREEN_HEIGHT = 1080
+    #SCREEN_WIDTH = pygame.display.Info().current_w #1920
+    #SCREEN_HEIGHT = pygame.display.Info().current_h #1080
 
     def __init__(self, display, inputs):
         self.display = display
@@ -22,6 +22,9 @@ class Game:
         self.university = ""
         self.titi = False
 
+    #@staticmethod
+    #def get_screen_size():
+    #    return (pygame.display.Info().current_w,pygame.display.Info().current_h)
 
     def get_pressed(self):
         return self.inputs.get_pressed()

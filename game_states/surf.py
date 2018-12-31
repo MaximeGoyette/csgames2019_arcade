@@ -29,8 +29,8 @@ class Entity:
         self.to_remove = True
 
     def map_pos(self, x, y):
-        y_p = mapf(y, 0, 1, HORIZON_Y, self.surf.game.SCREEN_HEIGHT)
-        x_p = mapf(x, 0, 1, -1, 1) * mapf(y, 0, 1, 50, 350) + self.surf.game.SCREEN_WIDTH / 2
+        y_p = mapf(y, 0, 1, HORIZON_Y, pygame.display.Info().current_h)
+        x_p = mapf(x, 0, 1, -1, 1) * mapf(y, 0, 1, 50, 350) + pygame.display.Info().current_w / 2
 
         return (x_p, y_p)
 
@@ -93,7 +93,8 @@ class Player(Entity):
         pygame.draw.line(self.surf.game.display, (0, 0, 0), p1, p2)
 
         #Render Life
-        lives_image = pygame.transform.scale(self.surf.amazon, (50,50))
+        afifth = pygame.display.Info().current_h / 5
+        lives_image = pygame.transform.scale(self.surf.amazon, (afifth,afifth))
 
         for i in range(self.lives):
             self.surf.game.display.blit(lives_image,(lives_image.get_size()[0] * i, 0))
@@ -250,6 +251,7 @@ class Surf:
         self.game = game
         self.player = Player(self)
         self.background = pygame.image.load('assets/background2.png')
+        self.background = pygame.transform.scale(self.background,(pygame.display.Info().current_w,pygame.display.Info().current_h))
         self.rock = pygame.image.load('assets/rock.png').convert_alpha()
         self.cone = pygame.image.load('assets/buoy.png').convert_alpha()
         #self.tree = pygame.image.load('assets/tree.png').convert_alpha()
@@ -286,7 +288,7 @@ class Surf:
         for e in self.obstacle:
             if self.player.get_rect().colliderect( e.get_rect()):
                 name = self.font.render("Perdu", 0, (0, 0, 0))
-                text_rect = name.get_rect(center=(self.game.SCREEN_WIDTH / 2, self.game.SCREEN_HEIGHT / 2))
+                text_rect = name.get_rect(center=(pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
                 self.game.display.blit(name, text_rect)
 
                 self.entities.remove(e)
@@ -331,7 +333,7 @@ class Surf:
         #Cheats
         if pygame.key.get_pressed()[pygame.K_KP_PLUS]:
             self.player.lives += 1
-        elif pygame.key.get_pressed()[pygame.K_KP_PLUS]:
+        elif pygame.key.get_pressed()[pygame.K_KP_MINUS]:
             self.player.lives -= 1
 
     def end_game(self):

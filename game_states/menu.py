@@ -70,8 +70,8 @@ class Menu:
                 self.game.state = surf.Surf(self.game)
                 return
 
-            pygame.draw.rect(self.game.display, (0, 255, 0), (150, 200, 500, 200))
+            pygame.draw.rect(self.game.display, (0, 255, 0), (pygame.display.Info().current_w / 2 - 500/2, pygame.display.Info().current_h / 2 - 200/2, 500, 200))
 
             name = self.font.render("READY " + str(remaining), 0, (0, 0, 0))
-            text_rect = name.get_rect(center=(self.game.SCREEN_WIDTH / 2, self.game.SCREEN_HEIGHT / 2))
+            text_rect = name.get_rect(center=(pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
             self.game.display.blit(name, text_rect)

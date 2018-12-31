@@ -19,7 +19,7 @@ def main():
         border = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #, pygame.FULLSCREEN)
         inputs = GPIO()
     else:
-        border = pygame.display.set_mode((game.Game.SCREEN_WIDTH, game.Game.SCREEN_HEIGHT))
+        border = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h))
         inputs = Keyboard()
 
     try:
