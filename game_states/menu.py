@@ -8,9 +8,10 @@ class Menu:
 
     def __init__(self, game):
         self.game = game
-        self.background = pygame.image.load('assets/menu.jpg')
+        self.background = pygame.image.load('assets/menu.png')
+        self.background = pygame.transform.scale(self.background,(pygame.display.Info().current_w,pygame.display.Info().current_h))
         self.index = random.randint(0, len(self.UNIVERSITIES) - 1)
-        self.font = pygame.font.SysFont("Arial", 70, True)
+        self.font = pygame.font.SysFont("Arial", 100, True)
         self.bounce = False
         self.bounce_time = 0
 
@@ -27,12 +28,12 @@ class Menu:
 
         # shadow text
         name = self.font.render(self.UNIVERSITIES[self.index], 0, (153,132,0))
-        text_rect = name.get_rect(center=(473+5, 419+5))
+        text_rect = name.get_rect(center=(pygame.display.Info().current_w / 2 +5, pygame.display.Info().current_h / 2+5))
         self.game.display.blit(name, text_rect)
 
         # main text
         name = self.font.render(self.UNIVERSITIES[self.index], 0, (255,255,0))
-        text_rect = name.get_rect(center=(473, 419))
+        text_rect = name.get_rect(center=(pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
         self.game.display.blit(name, text_rect)
 
 
