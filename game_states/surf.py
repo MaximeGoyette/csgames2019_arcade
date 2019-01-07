@@ -48,6 +48,7 @@ class Player(Entity):
         self.x = 0.5
         self.y = self.PLAYER_BASE_Y
         self.lives = 3
+        self.chef =  pygame.transform.scale(self.surf.chef, (100,100))
 
 
 
@@ -76,8 +77,8 @@ class Player(Entity):
     def render(self):
         x, y = self.map_pos(self.real_x, self.y)
 
-        pygame.draw.rect(self.surf.game.display, (255, 255, 0), (x, y, 20, 40))
-
+        #pygame.draw.rect(self.surf.game.display, (255, 255, 0), (x, y, 20, 40))
+        self.surf.game.display.blit(self.chef,(x, y))
         p1 = self.map_pos(0.5, 0)
 
         # pygame.draw.line(self.surf.game.display, (0, 0, 0), (x + self.BOARD_WIDTH / 2, y), p1)
@@ -101,7 +102,7 @@ class Player(Entity):
     
     def get_rect(self):
         x, y = self.map_pos(self.real_x, self.y)
-        return pygame.Rect(x, y, 20, 40)
+        return pygame.Rect(x, y, self.chef.get_rect().size[0], self.chef.get_rect().size[1])
 
 
 
@@ -247,15 +248,31 @@ class Surf:
     UP = 2
     DOWN = 3
 
+    FACES = {
+            'Sherby':['Sherb - Chevre.png', 'Sherb - Vinny.png'],
+            'UQOttawa': ['UQoT - Mario.png','UQoT - Nick.png'],
+            'UQAC': ['UQAC - Arragorn.png'],
+            'UQAR': ['UQAR - Marie.png','UQAR - Roger.png'],
+            'UQAT': ['UQAT - PO.png'],
+            'Conco': ['Concordia - Marty.png'],
+            'ETS': ['ETS - Gab.png'],
+            'McGill': ['McGill - Kuvish.png'],
+            'Laval': ['UL - Biggy.png'],
+            'Poly' : ['EPM - Rapha.png','EPM - Taco.png'],
+            'ITR' : ['ITR - Iregne.png'],
+            'TITI' : ['Triche - Titi.png']
+             }
+
     def __init__(self, game):
         self.game = game
-        self.player = Player(self)
         self.background = pygame.image.load('assets/background2.png')
         self.background = pygame.transform.scale(self.background,(pygame.display.Info().current_w,pygame.display.Info().current_h))
         self.rock = pygame.image.load('assets/rock.png').convert_alpha()
         self.cone = pygame.image.load('assets/buoy.png').convert_alpha()
         #self.tree = pygame.image.load('assets/tree.png').convert_alpha()
         self.amazon = pygame.image.load('assets/18L.png').convert_alpha()
+        self.chef = pygame.image.load('assets/Chefs/'+Surf.FACES[self.game.university][random.randint(0,len(Surf.FACES[self.game.university])-1)]).convert_alpha()
+        self.player = Player(self)
         self.frame = 0
         self.y = 0
         self.entities = []
@@ -346,7 +363,7 @@ class Surf:
         for i in range(3):
             c = Cone(self)
             c.x = x + dx * i
-            c.y += (random.random() ) / 10.0
+            c.y += (random.random() - 0.5) / 10.0
 
 
             self.entities.append(c)

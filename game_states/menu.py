@@ -4,7 +4,7 @@ import surf
 
 
 class Menu:
-    UNIVERSITIES = sorted(['Sherby', 'UQOttawa', 'UQAC', 'UQAR', 'UQAT', 'Conco', 'ETS', 'McGill', 'Laval', 'Poly'])
+    UNIVERSITIES = sorted(['Sherby', 'UQOttawa', 'UQAC', 'UQAR', 'UQAT', 'Conco', 'ETS', 'McGill', 'Laval', 'Poly', 'ITR'])
 
     def __init__(self, game):
         self.game = game
@@ -67,6 +67,7 @@ class Menu:
                 self.game.university = self.UNIVERSITIES[self.index]
                 if pygame.key.get_pressed()[pygame.K_KP_PERIOD] and pygame.key.get_pressed()[pygame.K_KP1] and pygame.key.get_pressed()[pygame.K_KP3]:
                     self.game.titi = True
+                    self.game.university = 'TITI'
                 self.game.state = surf.Surf(self.game)
                 return
 
