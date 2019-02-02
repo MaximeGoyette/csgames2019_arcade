@@ -10,8 +10,8 @@ Si nous réussisons à impressionner les autres écoles nous aurons un meilleur 
 ## Dépendances
 
 - Python2
-- Pygame
-- Pigpio
+- Pygame (librairie de jeu)
+- Pigpio (communication raspberry pi)
 
 ## Installation
 
