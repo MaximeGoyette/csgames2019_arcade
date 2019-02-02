@@ -4,7 +4,7 @@ Un simulateur de surf pour les cs games 2019.
 
 ## Motivation
 
-Notre objectif avec ce projet est t'épater la galerie.
+Notre objectif avec ce projet est d'épater la galerie.
 Si nous réussisons à impressionner les autres écoles nous aurons un meilleur score de participation.
 
 ## Dépendances
