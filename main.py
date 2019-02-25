@@ -8,7 +8,7 @@ from inputs import GPIO, Keyboard
 
 
 ON_ARCADE = os.uname()[1] == 'raspberrypi'
-WINDOWED = sys.argv[1] == '--windowed'
+WINDOWED = '--windowed' in sys.argv
 
 def main():
     pygame.init()
