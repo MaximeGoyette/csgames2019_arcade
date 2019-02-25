@@ -17,7 +17,6 @@ class Game:
         self.inputs = inputs
         self.reset_data()
 
-    
     def reset_data(self):
         self.university = ""
         self.titi = False

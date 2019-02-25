@@ -8,6 +8,7 @@ from inputs import GPIO, Keyboard
 
 
 ON_ARCADE = os.uname()[1] == 'raspberrypi'
+WINDOWED = sys.argv[1] == '--windowed'
 
 def main():
     pygame.init()
@@ -18,6 +19,9 @@ def main():
     if ON_ARCADE:
         border = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #, pygame.FULLSCREEN)
         inputs = GPIO()
+    elif WINDOWED:
+        border = pygame.display.set_mode((1280, 760))
+        inputs = Keyboard()
     else:
         border = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h))
         inputs = Keyboard()
