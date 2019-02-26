@@ -99,7 +99,7 @@ class Player(Entity):
 
         for i in range(self.lives):
             self.surf.game.display.blit(lives_image,(lives_image.get_size()[0] * i, 0))
-    
+
     def get_rect(self):
         x, y = self.map_pos(self.real_x, self.y)
         return pygame.Rect(x, y, self.chef.get_rect().size[0], self.chef.get_rect().size[1])
@@ -328,7 +328,8 @@ class Surf:
         self.frame += 1
 
         if self.frame % int(0.6/self.current_speed) == 0:
-            self.create_wall(random.random() * 0.4)
+        #if self.frame % 30 == 0:
+            self.create_wall(random.random() * 0.6)
         #if self.frame % 20 == 0:
         #    self.create_rock(random.random() * 0.4)
 
@@ -354,13 +355,12 @@ class Surf:
             self.player.lives -= 1
 
     def end_game(self):
-
         self.game.state = menu.Menu(self.game)
 
     def create_wall(self, x=0, dx=0.2, n=3):
         print 'create_wall'
 
-        for i in range(3):
+        for i in range(n):
             c = Cone(self)
             c.x = x + dx * i
             c.y += (random.random() - 0.5) / 10.0

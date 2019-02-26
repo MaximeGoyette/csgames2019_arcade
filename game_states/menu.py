@@ -36,7 +36,6 @@ class Menu:
         text_rect = name.get_rect(center=(pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
         self.game.display.blit(name, text_rect)
 
-
         if self.pressed[0] and not self.bounce and not self.ready:
             self.bounce = True
             self.bounce_time = pygame.time.get_ticks()
