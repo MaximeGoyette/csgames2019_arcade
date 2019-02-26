@@ -327,7 +327,7 @@ class Surf:
 
         self.frame += 1
 
-        if self.frame % 30 == 0:
+        if self.frame % int(0.6/self.current_speed) == 0:
             self.create_wall(random.random() * 0.4)
         #if self.frame % 20 == 0:
         #    self.create_rock(random.random() * 0.4)
