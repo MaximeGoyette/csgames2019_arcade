@@ -47,7 +47,7 @@ class Player(Entity):
         self.real_x = 0.5
         self.x = 0.5
         self.y = self.PLAYER_BASE_Y
-        self.lives = 3
+        self.lives = 7
         self.chef =  pygame.transform.scale(self.surf.chef, (100,100))
 
 
