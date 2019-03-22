@@ -267,7 +267,7 @@ class Surf:
                 'ULaurentian' : 0, 
                 'UYork' : 1, 
                 'UQO' : 0,
-                'TITI' : 0
+                'Benevol' : 1
              }
 
     def __init__(self, game):
