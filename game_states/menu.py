@@ -4,7 +4,7 @@ import surf
 
 
 class Menu:
-    UNIVERSITIES = sorted(['Sherby', 'UQOttawa', 'UQAC', 'UQAR', 'UQAT', 'Conco', 'ETS', 'McGill', 'Laval', 'Poly', 'ITR'])
+    UNIVERSITIES = sorted(['Sherby', 'UOttawa', 'Conco', 'ETS', 'McGill', 'Laval', 'Poly', 'UQAM', 'UGuelph', 'URochester', 'UCarleton', 'UWindsor', 'UManitoba', 'UBrock', 'UdeM', 'ULaurentian', 'UYork', 'UQO'])
 
     def __init__(self, game):
         self.game = game

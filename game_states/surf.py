@@ -249,18 +249,25 @@ class Surf:
     DOWN = 3
 
     FACES = {
-            'Sherby':['Sherb - Chevre.png', 'Sherb - Vinny.png'],
-            'UQOttawa': ['UQoT - Mario.png','UQoT - Nick.png'],
-            'UQAC': ['UQAC - Arragorn.png'],
-            'UQAR': ['UQAR - Marie.png','UQAR - Roger.png'],
-            'UQAT': ['UQAT - PO.png'],
-            'Conco': ['Concordia - Marty.png'],
-            'ETS': ['ETS - Gab.png'],
-            'McGill': ['McGill - Kuvish.png'],
-            'Laval': ['UL - Biggy.png'],
-            'Poly' : ['EPM - Rapha.png','EPM - Taco.png'],
-            'ITR' : ['ITR - Iregne.png'],
-            'TITI' : ['Triche - Titi.png']
+                'Sherby' : 2,
+                'UOttawa' : 1, 
+                'Conco' : 1, 
+                'ETS' : 1, 
+                'McGill' : 1, 
+                'Laval' : 2, 
+                'Poly' : 3, 
+                'UQAM' : 1, 
+                'UGuelph' : 1, 
+                'URochester' : 0, 
+                'UCarleton' : 0, 
+                'UWindsor' : 2, 
+                'UManitoba' : 1, 
+                'UBrock' : 1, 
+                'UdeM' : 1, 
+                'ULaurentian' : 0, 
+                'UYork' : 1, 
+                'UQO' : 0,
+                'TITI' : 0
              }
 
     def __init__(self, game):
@@ -271,7 +278,14 @@ class Surf:
         self.cone = pygame.image.load('assets/buoy.png').convert_alpha()
         #self.tree = pygame.image.load('assets/tree.png').convert_alpha()
         self.amazon = pygame.image.load('assets/18L.png').convert_alpha()
-        self.chef = pygame.image.load('assets/Chefs/'+Surf.FACES[self.game.university][random.randint(0,len(Surf.FACES[self.game.university])-1)]).convert_alpha()
+        numberofPic = Surf.FACES[self.game.university]
+
+        imgUrl = 'assets/Chefs/'
+        if numberofPic > 0:
+            imgUrl += '{}{}.png'.format(self.game.university, random.randrange(numberofPic))
+        else:
+            imgUrl += 'Default.png'
+        self.chef = pygame.image.load(imgUrl).convert_alpha()
         self.player = Player(self)
         self.frame = 0
         self.y = 0
