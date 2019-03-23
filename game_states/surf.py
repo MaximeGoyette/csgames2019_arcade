@@ -49,6 +49,7 @@ class Player(Entity):
         self.y = self.PLAYER_BASE_Y
         self.lives = 7
         self.chef =  pygame.transform.scale(self.surf.chef, (100,100))
+        self.skimboard = pygame.transform.scale(self.surf.skimboard, (100,200))
 
 
 
@@ -78,6 +79,7 @@ class Player(Entity):
         x, y = self.map_pos(self.real_x, self.y)
 
         #pygame.draw.rect(self.surf.game.display, (255, 255, 0), (x, y, 20, 40))
+        self.surf.game.display.blit(self.skimboard, (x, y - 60))
         self.surf.game.display.blit(self.chef,(x, y))
         p1 = self.map_pos(0.5, 0)
 
@@ -278,6 +280,7 @@ class Surf:
         self.cone = pygame.image.load('assets/buoy.png').convert_alpha()
         #self.tree = pygame.image.load('assets/tree.png').convert_alpha()
         self.amazon = pygame.image.load('assets/18L.png').convert_alpha()
+        self.skimboard = pygame.image.load('assets/skimboard.png').convert_alpha()
         numberofPic = Surf.FACES[self.game.university]
 
         imgUrl = 'assets/Chefs/'
